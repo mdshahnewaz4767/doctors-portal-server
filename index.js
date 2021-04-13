@@ -2,12 +2,16 @@ const express = require('express');
 const MongoClient = require('mongodb').MongoClient;
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const fileUpload = require('express-fileupload');
 require('dotenv').config();
 
 const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.static('doctors'));
+app.use(fileUpload());
+
 const port = 5000;
 
 
@@ -15,6 +19,7 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 client.connect(err => {
   const appointmentCollection = client.db("doctorsPortal").collection("appointments");
+  const doctorCollection = client.db("doctorsPortal").collection("doctors");
   
 
     //insert data to the database
@@ -41,6 +46,27 @@ client.connect(err => {
         appointmentCollection.find({})
         .toArray((err, documents) => {
             res.send(documents);
+        })
+    })
+
+    //insert doctor
+    app.post('/addADoctor', (req, res) => {
+        const file = req.files.file;
+        const name = req.body.name;
+        const email = req.body.email;
+        const newImg = file.data;
+        const encImg = newImg.toString('base64');
+
+        var image = {
+            contentType: file.mimetype,
+            size: file.size,
+            img: Buffer.from(encImg, 'base64')
+        };
+
+        doctorCollection.insertOne({ name, email, image })
+        .then(result => {
+            console.log(result);
+            res.send(result.insertedCount > 0);
         })
     })
 
