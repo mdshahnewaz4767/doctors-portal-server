@@ -17,24 +17,32 @@ client.connect(err => {
   const appointmentCollection = client.db("doctorsPortal").collection("appointments");
   
 
-  //insert data to the database
-  app.post('/addAppointment', (req, res) => {
-    const appointment = req.body;
-    appointmentCollection.insertOne(appointment)
-    .then(result => {
-        res.send(result.insertedCount > 0);
+    //insert data to the database
+    app.post('/addAppointment', (req, res) => {
+        const appointment = req.body;
+        appointmentCollection.insertOne(appointment)
+        .then(result => {
+            res.send(result.insertedCount > 0);
+        })
     })
-  })
 
-  //load data from the database
-  app.post('/appointmentsByDate', (req, res) => {
-    const date = req.body;
-    console.log(date.date);
-    appointmentCollection.find({date: date.date})
-    .toArray( (err, documents) => {
-        res.send(documents);
+    //load specific data from the database
+    app.post('/appointmentsByDate', (req, res) => {
+        const date = req.body;
+        console.log(date.date);
+        appointmentCollection.find({date: date.date})
+        .toArray( (err, documents) => {
+            res.send(documents);
+        })
     })
-  })
+
+    //load all data
+    app.get('/appointments', (req, res) => {
+        appointmentCollection.find({})
+        .toArray((err, documents) => {
+            res.send(documents);
+        })
+    })
 
 
 });
