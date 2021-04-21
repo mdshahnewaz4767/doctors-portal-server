@@ -54,6 +54,7 @@ client.connect(err => {
         const file = req.files.file;
         const name = req.body.name;
         const email = req.body.email;
+        const phone = req.body.phone;
         const newImg = file.data;
         const encImg = newImg.toString('base64');
 
@@ -63,12 +64,21 @@ client.connect(err => {
             img: Buffer.from(encImg, 'base64')
         };
 
-        doctorCollection.insertOne({ name, email, image })
+        doctorCollection.insertOne({ name, email, phone, image})
         .then(result => {
             console.log(result);
             res.send(result.insertedCount > 0);
         })
     })
+
+    //read review data
+    app.get('/doctors', (req, res) => {
+        doctorCollection.find({})
+        .toArray( (err, documents) => {
+        res.send(documents);
+        })
+    })
+
 
 
 });
