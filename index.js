@@ -103,7 +103,7 @@ client.connect(err => {
 
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.send('Doctors Portal Server!')
 })
 
 app.listen(process.env.PORT || port);
