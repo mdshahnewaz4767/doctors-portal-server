@@ -4,7 +4,7 @@ Patient appointment making system and Doctors report generator. A patient can ma
 **Technology:** React, React Hooks, Firebase Hosting, Bootstrap, Node.js, MongoDB\
 **Tools:** VSCode, Git, Netlify, Firebase, Heroku.
 
-**Live Link:** [Doctors-Portal](/)\
+**Live Link:** [Doctors-Portal](https://doctors-portal-cc647.web.app/)\
 **Font-end Repository:** [Doctors-Portal](https://github.com/shahnewaz171/doctors-portal)
 
 
