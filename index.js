@@ -34,10 +34,18 @@ client.connect(err => {
     //load specific data from the database
     app.post('/appointmentsByDate', (req, res) => {
         const date = req.body;
-        console.log(date.date);
-        appointmentCollection.find({date: date.date})
-        .toArray( (err, documents) => {
-            res.send(documents);
+        const email = req.body.email;
+        doctorCollection.find({ email: email })
+        .toArray((err, doctors) => {
+            const filter = { date: date.date }
+            if (doctors.length === 0) {
+                filter.email = email;
+            }
+            appointmentCollection.find(filter)
+                .toArray((err, documents) => {
+                console.log(email, date.date, doctors, documents)
+                res.send(documents);
+            })
         })
     })
 
@@ -76,6 +84,15 @@ client.connect(err => {
         doctorCollection.find({})
         .toArray( (err, documents) => {
         res.send(documents);
+        })
+    })
+
+    //limited access 
+    app.post('/isDoctor', (req, res) => {
+        const email = req.body.email;
+        doctorCollection.find({ email: email })
+        .toArray((err, doctors) => {
+           res.send(doctors.length > 0);
         })
     })
 
